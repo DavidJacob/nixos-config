@@ -5,13 +5,17 @@
 
   # ---------- Boot, encryption, hibernation ----------
   boot.loader.systemd-boot.enable = true;
+  boot.loader.systemd-boot.configurationLimit = 10;   # keep the 1 GB boot partition from filling up
   boot.loader.efi.canTouchEfiVariables = true;
   boot.kernelPackages = pkgs.linuxPackages_latest;   # newest kernel: best for recent Intel laptops
 
   # Unlock the encrypted partition at boot. Root and swap are LVM volumes
   # inside it, so one password unlocks both. nixos-generate-config does not
   # detect LUKS under LVM, which is why this line is needed here.
-  boot.initrd.luks.devices.cryptroot.device = "/dev/disk/by-partlabel/cryptroot";
+  boot.initrd.luks.devices.cryptroot = {
+    device = "/dev/disk/by-partlabel/cryptroot";
+    allowDiscards = true;   # lets SSD TRIM pass through the encryption
+  };
 
   # Resume from the encrypted swap volume after hibernation
   boot.resumeDevice = "/dev/disk/by-label/swap";
@@ -84,6 +88,7 @@
   # ---------- Desktop: Hyprland ----------
   programs.hyprland.enable = true;
   programs.hyprlock.enable = true;
+  xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];   # file open/save dialogs
   environment.sessionVariables.NIXOS_OZONE_WL = "1";   # Electron apps run natively on Wayland
 
   # ---------- Apps ----------
@@ -94,7 +99,7 @@
     # Terminal and editor
     ghostty
     neovim
-    git gcc gnumake unzip wget curl ripgrep fd lazygit tree-sitter
+    git gh gcc gnumake unzip wget curl ripgrep fd lazygit tree-sitter
 
     # Hyprland desktop pieces
     waybar                 # status bar
