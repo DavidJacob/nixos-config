@@ -91,6 +91,12 @@
   xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];   # file open/save dialogs
   environment.sessionVariables.NIXOS_OZONE_WL = "1";   # Electron apps run natively on Wayland
 
+  # ---------- GPG ----------
+  programs.gnupg.agent = {
+    enable = true;
+    pinentryPackage = pkgs.pinentry-qt;
+  };
+
   # ---------- Apps ----------
   programs.firefox.enable = true;
   programs.nix-ld.enable = true;   # lets LazyVim's Mason-downloaded tools run
