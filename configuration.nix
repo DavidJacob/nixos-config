@@ -1,7 +1,7 @@
 { config, pkgs, ... }:
 
 {
-  imports = [ ./hardware-configuration.nix ];
+  imports = [ ./hardware-configuration.nix ./modules/zsh.nix ];
 
   # ---------- Boot, encryption, hibernation ----------
   boot.loader.systemd-boot.enable = true;
