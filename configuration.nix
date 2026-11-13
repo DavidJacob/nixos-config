@@ -8,6 +8,7 @@
   boot.loader.systemd-boot.configurationLimit = 10;   # keep the 1 GB boot partition from filling up
   boot.loader.efi.canTouchEfiVariables = true;
   boot.kernelPackages = pkgs.linuxPackages_latest;   # newest kernel: best for recent Intel laptops
+  boot.consoleLogLevel = 3;   # only print CRIT logs to login screen
 
   # Unlock the encrypted partition at boot. Root and swap are LVM volumes
   # inside it, so one password unlocks both. nixos-generate-config does not
@@ -74,6 +75,26 @@
   services.power-profiles-daemon.enable = true;
   services.upower.enable = true;
   services.fwupd.enable = true;                         # firmware updates: fwupdmgr update
+
+  # ---------- Login ----------
+  services.greetd = {
+    enable = true;
+    settings.default_session = {
+      command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --asterisks --cmd start-hyprland";
+      user = "greeter";
+    };
+  };
+
+  # Prevent boot messages from appearing
+  systemd.services.greetd.serviceConfig = {
+    Type = "idle";
+    StandardInput = "tty";
+    StandardOutput = "tty";
+    StandardError = "journal";
+    TTYReset = true;
+    TTYVHangup = true;
+    TTYVDisallocate = true;
+  };
 
   # ---------- Sound and Bluetooth ----------
   security.rtkit.enable = true;
