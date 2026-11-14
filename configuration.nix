@@ -131,7 +131,7 @@
     # Terminal and editor
     ghostty
     neovim
-    git gh gcc gnumake unzip wget curl ripgrep fd lazygit tree-sitter
+    git gcc gnumake unzip wget curl ripgrep fd lazygit tree-sitter
 
     # Hyprland desktop pieces
     waybar                 # status bar

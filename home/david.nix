@@ -27,6 +27,11 @@ in
     };
   };
 
+  programs.gh = {
+    enable = true;
+    settings.git_protocol = "https";
+  };
+
   # ---------- Hyprland, hypridle, hyprlock ----------
   # ~/.config/hypr becomes a link to the hypr folder in this repo
   xdg.configFile."hypr".source = link "hypr";
