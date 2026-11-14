@@ -121,6 +121,10 @@
   programs.gnupg.agent = {
     enable = true;
     pinentryPackage = pkgs.pinentry-qt;
+    settings = {
+      default-cache-ttl = 28800;   # forget after 8 hour without signing
+      max-cache-ttl = 28800;   # always ask after 8 hours
+    };
   };
 
   # ---------- Apps ----------
