@@ -1,5 +1,5 @@
 # home/david.nix: everything in David's home folder
-{ config, ... }:
+{ config, pkgs, ... }:
 
 let
   # Writable links into the repo: edits apply as soon as you save, no rebuild.
@@ -10,6 +10,11 @@ in
 {
   # The Home Manager release this config was first written for. Never change it.
   home.stateVersion = "26.05";
+
+  # ---------- Packages ----------
+  home.packages = with pkgs; [
+    google-chrome
+  ];
 
   # ---------- Git, with commits signed by your GPG key ----------
   programs.git = {
