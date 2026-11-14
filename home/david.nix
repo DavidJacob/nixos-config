@@ -16,12 +16,12 @@ in
     enable = true;
     settings = {
       user.name = "David";
-      user.email = "davidmjacob86@gmail.com";       # replace: the email verified on GitHub
+      user.email = "davidmjacob86@gmail.com";
       init.defaultBranch = "main";
       pull.rebase = true;
     };
     signing = {
-      key = "7AF135FF74247E22";                    # replace: the ID from gpg --list-secret-keys --keyid-format=long
+      key = "7AF135FF74247E22";
       format = "openpgp";
       signByDefault = true;                 # signs commits and tags
     };
