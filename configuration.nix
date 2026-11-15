@@ -92,7 +92,7 @@
   users.users.david = {
     isNormalUser = true;
     description = "David";
-    extraGroups = [ "wheel" "networkmanager" "video" ];
+    extraGroups = [ "wheel" "networkmanager" "video" "i2c" ];
   };
 
   # ---------- Intel Iris Xe graphics ----------
@@ -127,6 +127,9 @@
   hardware.bluetooth.enable = true;
   services.blueman.enable = true;
 
+  # ---------- External Monitors ----------
+  hardware.i2c.enable = true;   # DDC/DI: control brightness of external monitors
+
   # ---------- Desktop: Hyprland ----------
   programs.hyprland.enable = true;
   programs.hyprlock.enable = true;
@@ -159,6 +162,7 @@
     grim slurp wl-clipboard  # screenshots and clipboard
     brightnessctl          # screen brightness keys
     pavucontrol            # sound settings
+    ddcutil                # control external monitors
   ];
 
   fonts.packages = with pkgs; [

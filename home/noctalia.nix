@@ -36,6 +36,9 @@ in
       # hyprlock and hypridle handle locking. With Noctalia's lock screen on as
       # well, both would react to the same lock signal and fight over the screen.
       lockscreen.enabled = false;
+
+      # Enable DDC/DI for controlling external monitors
+      brightness.enable_ddcutil = true;
     };
   };
 }

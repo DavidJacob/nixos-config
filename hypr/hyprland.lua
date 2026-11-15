@@ -210,8 +210,17 @@ hl.bind("XF86AudioRaiseVolume",  hl.dsp.exec_cmd(ipc .. " volume-up"), { locked 
 hl.bind("XF86AudioLowerVolume",  hl.dsp.exec_cmd(ipc .. " volume-down"),      { locked = true, repeating = true })
 hl.bind("XF86AudioMute",         hl.dsp.exec_cmd(ipc .. " volume-mute"),     { locked = true })
 hl.bind("XF86AudioMicMute",      hl.dsp.exec_cmd(ipc .. " mic-mute"),   { locked = true })
-hl.bind("XF86MonBrightnessUp",   hl.dsp.exec_cmd(ipc .. " brightness-up"),                          { locked = true, repeating = true })
-hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd(ipc .. " brightness-down"),                          { locked = true, repeating = true })
+hl.bind("XF86MonBrightnessUp",   hl.dsp.exec_cmd(ipc .. " brightness-up eDP-1"),                          { locked = true, repeating = true })
+hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd(ipc .. " brightness-down eDP-1"),                          { locked = true, repeating = true })
+
+-- Brightness of external monitors
+-- Super + brightness keys: the screen the cursor is on (a Dell at the desk)
+hl.bind(mainMod .. " + XF86MonBrightnessUp",   hl.dsp.exec_cmd(ipc .. " brightness-up"),   { repeating = true })
+hl.bind(mainMod .. " + XF86MonBrightnessDown", hl.dsp.exec_cmd(ipc .. " brightness-down"), { repeating = true })
+
+-- Super + Shift + brightness keys: every screen at once
+hl.bind(mainMod .. " + SHIFT + XF86MonBrightnessUp",   hl.dsp.exec_cmd(ipc .. " brightness-up '*'"),   { repeating = true })
+hl.bind(mainMod .. " + SHIFT + XF86MonBrightnessDown", hl.dsp.exec_cmd(ipc .. " brightness-down '*'"), { repeating = true })
 
 --------------------------------
 ---- WINDOWS AND WORKSPACES ----
