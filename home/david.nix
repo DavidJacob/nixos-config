@@ -39,6 +39,15 @@ in
     settings.git_protocol = "https";
   };
 
+  # ---------- Cursor theme ----------
+  home.pointerCursor = {
+    enable = true;
+    package = pkgs.bibata-cursors;    # a popular, clean cursor theme
+    name = "Bibata-Modern-Classic";
+    size = 24;
+    gtk.enable = true;                # GTK apps use it too
+  };
+
   # ---------- Hyprland, hypridle, hyprlock ----------
   # ~/.config/hypr becomes a link to the hypr folder in this repo
   xdg.configFile."hypr".source = link "hypr";
