@@ -188,6 +188,30 @@ hl.bind(mainMod .. " + Q", hl.dsp.window.close(),                     { descript
 hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen(),                { description = "Windows: Toggle fullscreen" })
 hl.bind(mainMod .. " + V", hl.dsp.window.float({ action = "toggle" }), { description = "Windows: Toggle floating" })
 
+-- Layout: arranging windows on one screen
+hl.bind(mainMod .. " + T",         hl.dsp.layout("togglesplit"), { description = "Layout: Flip split (side by side / stacked)" })
+hl.bind(mainMod .. " + SHIFT + T", hl.dsp.layout("swapsplit"),   { description = "Layout: Swap the two halves" })
+hl.bind(mainMod .. " + P",         hl.dsp.window.pseudo(),       { description = "Layout: Keep window's own size in its slot" })
+
+-- Resize the focused window: Super + Ctrl + vim keys or arrows (hold to repeat)
+local resizeSteps = {
+    { keys = { "h", "left" },  x = -40, y = 0,   what = "narrower" },
+    { keys = { "l", "right" }, x = 40,  y = 0,   what = "wider" },
+    { keys = { "k", "up" },    x = 0,   y = -40, what = "shorter" },
+    { keys = { "j", "down" },  x = 0,   y = 40,  what = "taller" },
+}
+for _, r in ipairs(resizeSteps) do
+    for _, key in ipairs(r.keys) do
+        hl.bind(mainMod .. " + CTRL + " .. key, hl.dsp.window.resize({ x = r.x, y = r.y, relative = true }),
+            { repeating = true, description = "Layout: Make window " .. r.what })
+    end
+end
+
+-- Tabs: stack windows in one slot and flip between them
+hl.bind(mainMod .. " + G",           hl.dsp.group.toggle(), { description = "Layout: Turn window into a tab group (or back)" })
+hl.bind(mainMod .. " + Tab",         hl.dsp.group.next(),   { description = "Layout: Next tab" })
+hl.bind(mainMod .. " + SHIFT + Tab", hl.dsp.group.prev(),   { description = "Layout: Previous tab" })
+
 -- Move focus and windows: vim keys or arrows
 local directions = {
     { keys = { "h", "left" },  dir = "left"  },
