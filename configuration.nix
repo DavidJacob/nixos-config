@@ -59,8 +59,23 @@
     options = "--delete-older-than 14d";
   };
 
-  # ---------- Thunderbolt ----------
+  # ---------- Caldigit Dock ----------
   services.hardware.bolt.enable = true;   # approves Thunderbolt devices
+
+  # Never prefer the CalDigit dock's audio: built-in speakers and mic stay default.
+  # The dock's devices are still listed if you pick them by hand.
+  services.pipewire.wireplumber.extraConfig."51-caldigit-audio" = {
+    "monitor.alsa.rules" = [{
+      matches = [
+        { "node.name" = "~alsa_output.usb-CalDigit.*"; }
+        { "node.name" = "~alsa_input.usb-CalDigit.*"; }
+      ];
+      actions.update-props = {
+        "priority.session" = 100;
+        "priority.driver" = 100;
+      };
+    }];
+  };
 
   # ---------- User ----------
   # zsh is configured in home/zsh.nix (Home Manager). These lines only
