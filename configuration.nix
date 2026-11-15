@@ -8,7 +8,6 @@
   boot.loader.systemd-boot.configurationLimit = 10;   # keep the 1 GB boot partition from filling up
   boot.loader.efi.canTouchEfiVariables = true;
   boot.kernelPackages = pkgs.linuxPackages_latest;   # newest kernel: best for recent Intel laptops
-  boot.consoleLogLevel = 3;   # only print CRIT logs to login screen
 
   # Unlock the encrypted partition at boot. Root and swap are LVM volumes
   # inside it, so one password unlocks both. nixos-generate-config does not
@@ -68,7 +67,10 @@
     enableGlobalCompInit = false;   # Home Manager's .zshrc already runs compinit
   };
   users.defaultUserShell = pkgs.zsh;
-  environment.pathsToLink = [ "/share/zsh" ];   # completions for system packages
+  environment.pathsToLink = [
+    "/share/zsh"                # completions for system packages
+    "/share/wayland-sessions"   # lets the login screen find the Hyprland session
+  ];
   users.users.david = {
     isNormalUser = true;
     description = "David";
@@ -88,23 +90,13 @@
   services.fwupd.enable = true;                         # firmware updates: fwupdmgr update
 
   # ---------- Login ----------
-  services.greetd = {
+  # Noctalia's graphical login screen (runs on greetd). Pick "Hyprland" as the
+  # session the first time; it remembers your choice.
+  services.displayManager.noctalia-greeter = {
     enable = true;
-    settings.default_session = {
-      command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --asterisks --cmd start-hyprland";
-      user = "greeter";
-    };
-  };
-
-  # Prevent boot messages from appearing
-  systemd.services.greetd.serviceConfig = {
-    Type = "idle";
-    StandardInput = "tty";
-    StandardOutput = "tty";
-    StandardError = "journal";
-    TTYReset = true;
-    TTYVHangup = true;
-    TTYVDisallocate = true;
+    # Lets Noctalia copy your wallpaper, colours and monitor layout to the
+    # login screen (Noctalia settings → Sync) without asking for a password.
+    passwordlessSyncUsers = [ "david" ];
   };
 
   # ---------- Sound and Bluetooth ----------
@@ -144,12 +136,8 @@
     git gcc gnumake unzip wget curl ripgrep fd lazygit tree-sitter
 
     # Hyprland desktop pieces
-    waybar                 # status bar
-    wofi                   # app launcher
-    mako                   # notifications
     hypridle               # idle -> lock -> suspend
     hyprpolkitagent        # password prompts for admin actions
-    networkmanagerapplet   # Wi-Fi tray icon
     grim slurp wl-clipboard  # screenshots and clipboard
     brightnessctl          # screen brightness keys
     pavucontrol            # sound settings
