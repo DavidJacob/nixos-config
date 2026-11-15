@@ -59,6 +59,9 @@
     options = "--delete-older-than 14d";
   };
 
+  # ---------- Thunderbolt ----------
+  services.hardware.bolt.enable = true;   # approves Thunderbolt devices
+
   # ---------- User ----------
   # zsh is configured in home/zsh.nix (Home Manager). These lines only
   # register it as a login shell and make it the default.

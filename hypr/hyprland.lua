@@ -4,12 +4,61 @@
 ------------------
 ---- MONITORS ----
 ------------------
+-- Desk layout (logical pixels): the two Dells side by side on top, the laptop
+-- centred underneath. Moving the cursor off the top of the laptop screen
+-- lands on the monitors.
+--
+--   +----------------+----------------+
+--   |   Dell (left)  |  Dell (right)  |   each 2560x1440
+--   |      0x0       |    2560x0      |
+--   +--------+-------+-------+--------+
+--            | laptop 1920x1440 |          1280x720 at scale 1.5
+--            +------------------+
+--
+-- The Dells are matched by description (make, model, serial) rather than by
+-- DP-x name, because those names can change between docks and reconnects.
+
+local laptop = {
+    output   = "eDP-1",
+    mode     = "preferred",
+    position = "1920x1440",
+    scale    = "1.5",
+}
+hl.monitor(laptop)
+
+hl.monitor({                                   -- left: the one cabled to the CalDigit
+    output   = "desc:Dell Inc. DELL P2720DC 81WTK9BQ09LS",
+    mode     = "2560x1440@59.95",
+    position = "0x0",
+    scale    = "1",
+})
+
+hl.monitor({                                   -- right: daisy-chained from the left one
+    output   = "desc:Dell Inc. DELL P2720DC 81WTK9CD05SS",
+    mode     = "2560x1440@59.95",
+    position = "2560x0",
+    scale    = "1",
+})
+
+-- Any other screen (a projector, a friend's monitor): sensible defaults
 hl.monitor({
     output   = "",
     mode     = "preferred",
     position = "auto",
     scale    = "auto",
 })
+local function log(msg)
+    hl.exec_cmd("sh -c 'echo \"" .. msg .. " $(date +%T)\" >> /tmp/lid.log'")
+end
+
+-- Lid closed at the desk: turn the laptop screen off.
+hl.bind("switch:on:Lid Switch", function()
+    hl.monitor({ output = "eDP-1", disabled = true })
+end, { locked = true })
+
+-- Lid opened: reload the config, which switches the laptop screen back on.
+-- (Re-adding the monitor rule at runtime doesn't wake a disabled screen.)
+hl.bind("switch:off:Lid Switch", hl.dsp.exec_cmd("hyprctl reload"), { locked = true })
 
 ---------------------
 ---- MY PROGRAMS ----
