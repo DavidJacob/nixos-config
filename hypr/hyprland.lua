@@ -9,14 +9,20 @@
 -- lands on the monitors.
 --
 --   +----------------+----------------+
---   |   Dell (left)  |  Dell (right)  |   each 2560x1440
---   |      0x0       |    2560x0      |
+--   |  left Dell     |  right Dell    |   each 2560x1440
+--   |  0x0           |  2560x0        |
+--   |  workspace 2   |  workspace 3   |
 --   +--------+-------+-------+--------+
---            | laptop 1920x1440 |          1280x720 at scale 1.5
---            +------------------+
+--            |     laptop     |           1280x720 at scale 1.5
+--            |   1920x1440    |
+--            |  workspace 1   |
+--            +----------------+
 --
 -- The Dells are matched by description (make, model, serial) rather than by
 -- DP-x name, because those names can change between docks and reconnects.
+
+local leftDell  = "desc:Dell Inc. DELL P2720DC 81WTK9BQ09LS"   -- cabled to the CalDigit
+local rightDell = "desc:Dell Inc. DELL P2720DC 81WTK9CD05SS"   -- daisy-chained from the left one
 
 local laptop = {
     output   = "eDP-1",
@@ -26,15 +32,15 @@ local laptop = {
 }
 hl.monitor(laptop)
 
-hl.monitor({                                   -- left: the one cabled to the CalDigit
-    output   = "desc:Dell Inc. DELL P2720DC 81WTK9BQ09LS",
+hl.monitor({
+    output   = leftDell,
     mode     = "2560x1440@59.95",
     position = "0x0",
     scale    = "1",
 })
 
-hl.monitor({                                   -- right: daisy-chained from the left one
-    output   = "desc:Dell Inc. DELL P2720DC 81WTK9CD05SS",
+hl.monitor({
+    output   = rightDell,
     mode     = "2560x1440@59.95",
     position = "2560x0",
     scale    = "1",
@@ -50,12 +56,36 @@ hl.monitor({
 
 -- Lid closed at the desk: turn the laptop screen off.
 hl.bind("switch:on:Lid Switch", function()
-    hl.monitor({ output = "eDP-1", disabled = true })
+    hl.monitor({ output = laptop.output, disabled = true })
 end, { locked = true })
 
 -- Lid opened: reload the config, which switches the laptop screen back on.
 -- (Re-adding the monitor rule at runtime doesn't wake a disabled screen.)
 hl.bind("switch:off:Lid Switch", hl.dsp.exec_cmd("hyprctl reload"), { locked = true })
+
+------------------------------
+---- WORKSPACES ON SCREENS ----
+------------------------------
+-- Each screen starts on its own workspace. Undocked, the Dell rules find no
+-- screen, so workspaces 2 and 3 simply open on the laptop when you use them.
+hl.workspace_rule({ workspace = "1", monitor = laptop.output, default = true })
+hl.workspace_rule({ workspace = "2", monitor = leftDell,      default = true })
+hl.workspace_rule({ workspace = "3", monitor = rightDell,     default = true })
+
+-- Programs that open on a particular screen when the Dells are connected.
+-- Undocked, the screen isn't found and they open where you are.
+-- Find a program's class with: hyprctl clients | grep class
+hl.window_rule({
+    name    = "chrome-on-right-dell",
+    match   = { class = "^google-chrome$" },
+    monitor = rightDell,
+})
+
+hl.window_rule({
+    name    = "ghostty-on-left-dell",
+    match   = { class = "^com\\.mitchellh\\.ghostty$" },
+    monitor = leftDell,
+})
 
 ---------------------
 ---- MY PROGRAMS ----
