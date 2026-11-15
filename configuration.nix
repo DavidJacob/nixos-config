@@ -1,7 +1,7 @@
 { config, pkgs, ... }:
 
 {
-  imports = [ ./hardware-configuration.nix ./modules/zsh.nix ];
+  imports = [ ./hardware-configuration.nix ];
 
   # ---------- Boot, encryption, hibernation ----------
   boot.loader.systemd-boot.enable = true;
@@ -61,8 +61,14 @@
   };
 
   # ---------- User ----------
-  programs.zsh.enable = true;
+  # zsh is configured in home/zsh.nix (Home Manager). These lines only
+  # register it as a login shell and make it the default.
+  programs.zsh = {
+    enable = true;
+    enableGlobalCompInit = false;   # Home Manager's .zshrc already runs compinit
+  };
   users.defaultUserShell = pkgs.zsh;
+  environment.pathsToLink = [ "/share/zsh" ];   # completions for system packages
   users.users.david = {
     isNormalUser = true;
     description = "David";

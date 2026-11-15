@@ -8,6 +8,8 @@ let
   link = path: config.lib.file.mkOutOfStoreSymlink "${repo}/${path}";
 in
 {
+  imports = [ ./zsh.nix ];
+
   # The Home Manager release this config was first written for. Never change it.
   home.stateVersion = "26.05";
 

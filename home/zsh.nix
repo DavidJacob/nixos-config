@@ -1,21 +1,31 @@
-# modules/zsh.nix: shell setup for all machines
-{ lib, pkgs, ... }:
+# home/zsh.nix: David's shell, managed by Home Manager
+{ ... }:
 
 {
   programs.zsh = {
     enable = true;
 
     # Suggests the rest of a command from your history in grey; press → to accept
-    autosuggestions.enable = true;
+    autosuggestion.enable = true;
     # Colours commands as you type: red means "command not found"
     syntaxHighlighting.enable = true;
 
-    histSize = 50000;
+    history = {
+      size = 50000;
+      save = 50000;
+      share = true;          # history is shared live between open terminals
+      ignoreAllDups = true;  # no duplicate entries in history
+      ignoreSpace = true;    # commands starting with a space aren't saved
+    };
+
+    # Up/Down search history for what you've already typed
+    historySubstringSearch = {
+      enable = true;
+      searchUpKey = [ "^[[A" "^[OA" ];
+      searchDownKey = [ "^[[B" "^[OB" ];
+    };
+
     setOptions = [
-      "SHARE_HISTORY"          # history is shared live between open terminals
-      "HIST_IGNORE_ALL_DUPS"   # no duplicate entries in history
-      "HIST_IGNORE_SPACE"      # commands starting with a space aren't saved
-      "HIST_FCNTL_LOCK"        # safe history writes with several shells open
       "AUTO_CD"                # type a folder name to cd into it
       "INTERACTIVE_COMMENTS"   # allow # comments on the command line
     ];
@@ -26,28 +36,17 @@
       update  = "nix flake update --flake /etc/nixos && sudo nixos-rebuild switch --flake /etc/nixos";
       clean   = "sudo nix-collect-garbage --delete-older-than 14d";
 
-      # Everyday
-      ls = "eza --group-directories-first --icons";
-      ll = "eza -l --group-directories-first --icons --git";
-      la = "eza -la --group-directories-first --icons --git";
-      tree = "eza --tree --icons";
+      # Everyday (ls, ll and lt come from programs.eza below)
+      la   = "eza -la";
+      tree = "eza --tree";
       v  = "nvim";
       lg = "lazygit";
       gs = "git status";
     };
 
-    # mkOrder 2000: runs after the plugins above, as history-substring-search
-    # must be loaded after syntax highlighting
-    interactiveShellInit = lib.mkOrder 2000 ''
+    initContent = ''
       # Emacs-style line editing (Ctrl+A start, Ctrl+E end, Ctrl+W delete word)
       bindkey -e
-
-      # Up/Down search history for what you've already typed
-      source ${pkgs.zsh-history-substring-search}/share/zsh-history-substring-search/zsh-history-substring-search.zsh
-      bindkey '^[[A' history-substring-search-up
-      bindkey '^[[B' history-substring-search-down
-      bindkey '^[OA' history-substring-search-up
-      bindkey '^[OB' history-substring-search-down
 
       # Ctrl+←/→ jump by word
       bindkey '^[[1;5D' backward-word
@@ -64,23 +63,29 @@
   programs.starship.enable = true;
 
   # Ctrl+R fuzzy history search, Ctrl+T insert a file path, Alt+C jump to a folder
-  programs.fzf = {
-    keybindings = true;
-    fuzzyCompletion = true;
-  };
+  programs.fzf.enable = true;
 
   # `z proj` jumps to the most-used folder matching "proj"
   programs.zoxide.enable = true;
 
   # Loads a project's dev shell automatically when you cd into it (needs a .envrc)
-  programs.direnv.enable = true;
+  programs.direnv = {
+    enable = true;
+    nix-direnv.enable = true;
+  };
 
-  environment.systemPackages = with pkgs; [
-    eza   # nicer ls
-    bat   # cat with syntax highlighting
-  ];
+  # Nicer ls: also sets up the ls, ll, lt and lla aliases
+  programs.eza = {
+    enable = true;
+    icons = "auto";
+    git = true;
+    extraOptions = [ "--group-directories-first" ];
+  };
 
-  environment.variables = {
+  # cat with syntax highlighting (run it as `bat`)
+  programs.bat.enable = true;
+
+  home.sessionVariables = {
     EDITOR = "nvim";
     VISUAL = "nvim";
   };
