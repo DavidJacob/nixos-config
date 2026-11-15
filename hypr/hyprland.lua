@@ -169,62 +169,92 @@ hl.gesture({
 ---------------------
 ---- KEYBINDINGS ----
 ---------------------
-hl.bind(mainMod .. " + Return",    hl.dsp.exec_cmd(terminal))
-hl.bind(mainMod .. " + D",         hl.dsp.exec_cmd(menu))
-hl.bind(mainMod .. " + S",         hl.dsp.exec_cmd(ipc .. " panel-toggle control-center"))
-hl.bind(mainMod .. " + X",         hl.dsp.exec_cmd(ipc .. " panel-toggle session"))
-hl.bind(mainMod .. " + comma",     hl.dsp.exec_cmd(ipc .. " settings-toggle"))
-hl.bind(mainMod .. " + Q",         hl.dsp.window.close())
-hl.bind(mainMod .. " + F",         hl.dsp.window.fullscreen())
-hl.bind(mainMod .. " + V",         hl.dsp.window.float({ action = "toggle" }))
-hl.bind(mainMod .. " + Escape",    hl.dsp.exec_cmd("hyprlock"))
-hl.bind(mainMod .. " + SHIFT + E", hl.dsp.exit())
+-- Each description reads "Category: what it does". Binds with one appear in
+-- the shortcut cheatsheet (Super+/), grouped by category; binds sharing a
+-- description are merged into one row.
 
--- Screenshot of a selected area, copied to the clipboard
-hl.bind("Print",                   hl.dsp.exec_cmd('grim -g "$(slurp)" - | wl-copy'))
-hl.bind(mainMod .. " + SHIFT + S", hl.dsp.exec_cmd('grim -g "$(slurp)" - | wl-copy'))
+-- Help
+hl.bind(mainMod .. " + slash", hl.dsp.exec_cmd("hypr-cheatsheet-toggle"), { description = "Help: Show or hide this cheatsheet" })
+
+-- Apps and Noctalia
+hl.bind(mainMod .. " + Return", hl.dsp.exec_cmd(terminal),                             { description = "Apps: Open terminal" })
+hl.bind(mainMod .. " + D",      hl.dsp.exec_cmd(menu),                                 { description = "Noctalia: App launcher" })
+hl.bind(mainMod .. " + S",      hl.dsp.exec_cmd(ipc .. " panel-toggle control-center"), { description = "Noctalia: Control centre (Wi-Fi, Bluetooth, sound)" })
+hl.bind(mainMod .. " + X",      hl.dsp.exec_cmd(ipc .. " panel-toggle session"),        { description = "Noctalia: Power menu" })
+hl.bind(mainMod .. " + comma",  hl.dsp.exec_cmd(ipc .. " settings-toggle"),             { description = "Noctalia: Settings" })
+
+-- Windows
+hl.bind(mainMod .. " + Q", hl.dsp.window.close(),                     { description = "Windows: Close window" })
+hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen(),                { description = "Windows: Toggle fullscreen" })
+hl.bind(mainMod .. " + V", hl.dsp.window.float({ action = "toggle" }), { description = "Windows: Toggle floating" })
 
 -- Move focus and windows: vim keys or arrows
 local directions = {
-    h = "left", j = "down", k = "up", l = "right",
-    left = "left", down = "down", up = "up", right = "right",
+    { keys = { "h", "left" },  dir = "left"  },
+    { keys = { "j", "down" },  dir = "down"  },
+    { keys = { "k", "up" },    dir = "up"    },
+    { keys = { "l", "right" }, dir = "right" },
 }
-for key, dir in pairs(directions) do
-    hl.bind(mainMod .. " + " .. key,             hl.dsp.focus({ direction = dir }))
-    hl.bind(mainMod .. " + SHIFT + " .. key,     hl.dsp.window.move({ direction = dir }))
+for _, d in ipairs(directions) do
+    for _, key in ipairs(d.keys) do
+        hl.bind(mainMod .. " + " .. key, hl.dsp.focus({ direction = d.dir }), { description = "Windows: Focus " .. d.dir })
+    end
 end
+for _, d in ipairs(directions) do
+    for _, key in ipairs(d.keys) do
+        hl.bind(mainMod .. " + SHIFT + " .. key, hl.dsp.window.move({ direction = d.dir }), { description = "Windows: Move window " .. d.dir .. " (also to the next screen)" })
+    end
+end
+
+-- Mouse: Super + left-drag moves, Super + right-drag resizes
+hl.bind(mainMod .. " + mouse:272", hl.dsp.window.drag(),   { mouse = true, description = "Windows: Move with the mouse" })
+hl.bind(mainMod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true, description = "Windows: Resize with the mouse" })
 
 -- Workspaces 1-10: Super + number switches, Super + Shift + number moves the window
 for i = 1, 10 do
     local key = i % 10   -- workspace 10 is on key 0
-    hl.bind(mainMod .. " + " .. key,         hl.dsp.focus({ workspace = i }))
-    hl.bind(mainMod .. " + SHIFT + " .. key, hl.dsp.window.move({ workspace = i }))
+    hl.bind(mainMod .. " + " .. key,         hl.dsp.focus({ workspace = i }),       { description = "Workspaces: Go to workspace" })
+    hl.bind(mainMod .. " + SHIFT + " .. key, hl.dsp.window.move({ workspace = i }), { description = "Workspaces: Move window to workspace" })
 end
 
--- Mouse: Super + left-drag moves, Super + right-drag resizes
-hl.bind(mainMod .. " + mouse:272", hl.dsp.window.drag(),   { mouse = true })
-hl.bind(mainMod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true })
+-- Screenshot of a selected area, copied to the clipboard
+hl.bind("Print",                   hl.dsp.exec_cmd('grim -g "$(slurp)" - | wl-copy'), { description = "Screenshots: Select an area, copy to clipboard" })
+hl.bind(mainMod .. " + SHIFT + S", hl.dsp.exec_cmd('grim -g "$(slurp)" - | wl-copy'), { description = "Screenshots: Select an area, copy to clipboard" })
 
--- Laptop volume and brightness keys, with Noctalia's on-screen popups
-hl.bind("XF86AudioRaiseVolume",  hl.dsp.exec_cmd(ipc .. " volume-up"), { locked = true, repeating = true })
-hl.bind("XF86AudioLowerVolume",  hl.dsp.exec_cmd(ipc .. " volume-down"),      { locked = true, repeating = true })
-hl.bind("XF86AudioMute",         hl.dsp.exec_cmd(ipc .. " volume-mute"),     { locked = true })
-hl.bind("XF86AudioMicMute",      hl.dsp.exec_cmd(ipc .. " mic-mute"),   { locked = true })
-hl.bind("XF86MonBrightnessUp",   hl.dsp.exec_cmd(ipc .. " brightness-up eDP-1"),                          { locked = true, repeating = true })
-hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd(ipc .. " brightness-down eDP-1"),                          { locked = true, repeating = true })
+-- Laptop volume keys, with Noctalia's on-screen popups
+hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd(ipc .. " volume-up"),   { locked = true, repeating = true, description = "Media: Volume up" })
+hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd(ipc .. " volume-down"), { locked = true, repeating = true, description = "Media: Volume down" })
+hl.bind("XF86AudioMute",        hl.dsp.exec_cmd(ipc .. " volume-mute"), { locked = true, description = "Media: Mute speakers" })
+hl.bind("XF86AudioMicMute",     hl.dsp.exec_cmd(ipc .. " mic-mute"),    { locked = true, description = "Media: Mute microphone" })
 
--- Brightness of external monitors
+-- Brightness: laptop keys always control the laptop screen
+hl.bind("XF86MonBrightnessUp",   hl.dsp.exec_cmd(ipc .. " brightness-up eDP-1"),   { locked = true, repeating = true, description = "Screens: Laptop brighter" })
+hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd(ipc .. " brightness-down eDP-1"), { locked = true, repeating = true, description = "Screens: Laptop dimmer" })
+
 -- Super + brightness keys: the screen the cursor is on (a Dell at the desk)
-hl.bind(mainMod .. " + XF86MonBrightnessUp",   hl.dsp.exec_cmd(ipc .. " brightness-up"),   { repeating = true })
-hl.bind(mainMod .. " + XF86MonBrightnessDown", hl.dsp.exec_cmd(ipc .. " brightness-down"), { repeating = true })
+hl.bind(mainMod .. " + XF86MonBrightnessUp",   hl.dsp.exec_cmd(ipc .. " brightness-up"),   { repeating = true, description = "Screens: Current screen brighter" })
+hl.bind(mainMod .. " + XF86MonBrightnessDown", hl.dsp.exec_cmd(ipc .. " brightness-down"), { repeating = true, description = "Screens: Current screen dimmer" })
 
 -- Super + Shift + brightness keys: every screen at once
-hl.bind(mainMod .. " + SHIFT + XF86MonBrightnessUp",   hl.dsp.exec_cmd(ipc .. " brightness-up '*'"),   { repeating = true })
-hl.bind(mainMod .. " + SHIFT + XF86MonBrightnessDown", hl.dsp.exec_cmd(ipc .. " brightness-down '*'"), { repeating = true })
+hl.bind(mainMod .. " + SHIFT + XF86MonBrightnessUp",   hl.dsp.exec_cmd(ipc .. " brightness-up '*'"),   { repeating = true, description = "Screens: All screens brighter" })
+hl.bind(mainMod .. " + SHIFT + XF86MonBrightnessDown", hl.dsp.exec_cmd(ipc .. " brightness-down '*'"), { repeating = true, description = "Screens: All screens dimmer" })
+
+-- Session
+hl.bind(mainMod .. " + Escape",    hl.dsp.exec_cmd("hyprlock"), { description = "Session: Lock screen" })
+hl.bind(mainMod .. " + SHIFT + E", hl.dsp.exit(),               { description = "Session: Log out of Hyprland" })
 
 --------------------------------
 ---- WINDOWS AND WORKSPACES ----
 --------------------------------
+hl.window_rule({
+    -- The shortcut cheatsheet (Super+/): a floating window in the middle of the screen
+    name   = "cheatsheet",
+    match  = { class = "^maple\\.cheatsheet$" },
+    float  = true,
+    size   = "760 monitor_h*0.85",   -- fits the laptop screen as well as the Dells
+    center = true,
+})
+
 hl.window_rule({
     -- Ignore apps that try to maximise themselves
     name  = "suppress-maximize-events",

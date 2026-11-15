@@ -8,7 +8,7 @@ let
   link = path: config.lib.file.mkOutOfStoreSymlink "${repo}/${path}";
 in
 {
-  imports = [ ./zsh.nix ./noctalia.nix ];
+  imports = [ ./zsh.nix ./noctalia.nix ./cheatsheet.nix ];
 
   # The Home Manager release this config was first written for. Never change it.
   home.stateVersion = "26.05";
