@@ -47,9 +47,6 @@ hl.monitor({
     position = "auto",
     scale    = "auto",
 })
-local function log(msg)
-    hl.exec_cmd("sh -c 'echo \"" .. msg .. " $(date +%T)\" >> /tmp/lid.log'")
-end
 
 -- Lid closed at the desk: turn the laptop screen off.
 hl.bind("switch:on:Lid Switch", function()
