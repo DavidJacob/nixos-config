@@ -247,6 +247,22 @@ end
 hl.bind(mainMod .. " + mouse:272", hl.dsp.window.drag(),   { mouse = true, description = "Windows: Move with the mouse" })
 hl.bind(mainMod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true, description = "Windows: Resize with the mouse" })
 
+-- Tabs: move the focused window into the group next to it (or back out)
+local intoGroup = {
+    { keys = { "h", "left" },  dir = "left"  },
+    { keys = { "j", "down" },  dir = "down"  },
+    { keys = { "k", "up" },    dir = "up"    },
+    { keys = { "l", "right" }, dir = "right" },
+}
+for _, g in ipairs(intoGroup) do
+    for _, key in ipairs(g.keys) do
+        hl.bind(mainMod .. " + ALT + " .. key, hl.dsp.window.move({ into_group = g.dir }),
+            { description = "Layout: Add window to the tab group " .. g.dir })
+    end
+end
+hl.bind(mainMod .. " + ALT + O", hl.dsp.window.move({ out_of_group = true }),
+    { description = "Layout: Take window out of its tab group" })
+
 -- Workspaces 1-10: Super + number switches, Super + Shift + number moves the window
 for i = 1, 10 do
     local key = i % 10   -- workspace 10 is on key 0
