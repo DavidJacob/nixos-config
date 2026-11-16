@@ -127,6 +127,9 @@
   hardware.bluetooth.enable = true;
   services.blueman.enable = true;
 
+  # ---------- USB ----------
+  services.udisks2.enable = true;   # lets your user mount USB drives without sudo
+
   # ---------- External Monitors ----------
   hardware.i2c.enable = true;   # DDC/DI: control brightness of external monitors
 

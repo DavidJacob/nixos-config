@@ -102,6 +102,7 @@ hl.on("hyprland.start", function()
     hl.exec_cmd("noctalia")   -- bar, launcher, notifications, Wi-Fi/Bluetooth/sound widgets
     hl.exec_cmd("hypridle")
     hl.exec_cmd("systemctl --user start hyprpolkitagent")
+    hl.exec_cmd("udiskie --tray")
 end)
 
 -------------------------------

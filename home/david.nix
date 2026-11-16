@@ -52,4 +52,12 @@ in
   # ---------- Hyprland, hypridle, hyprlock ----------
   # ~/.config/hypr becomes a link to the hypr folder in this repo
   xdg.configFile."hypr".source = link "hypr";
+
+  # ---------- USB disk automounter ----------
+  services.udiskie = {
+    enable = true;
+    automount = true;
+    notify = true;
+    tray = "auto";
+  };
 }
