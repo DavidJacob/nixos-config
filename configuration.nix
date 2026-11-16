@@ -146,6 +146,12 @@
     };
   };
 
+  # ---------- Keyring ----------
+  # Keyring for apps that store passwords and keys (Element, Chrome, etc.)
+  services.gnome.gnome-keyring.enable = true;
+  # Unlock it automatically with your login password
+  security.pam.services.greetd.enableGnomeKeyring = true;
+
   # ---------- Apps ----------
   programs.firefox.enable = true;
   programs.nix-ld.enable = true;   # lets LazyVim's Mason-downloaded tools run

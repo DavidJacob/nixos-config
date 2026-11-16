@@ -16,6 +16,7 @@ in
   # ---------- Packages ----------
   home.packages = with pkgs; [
     google-chrome
+    element-desktop
   ];
 
   # ---------- Git, with commits signed by your GPG key ----------
