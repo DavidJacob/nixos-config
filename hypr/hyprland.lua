@@ -11,7 +11,7 @@
 --   +----------------+----------------+
 --   |  left Dell     |  right Dell    |   each 2560x1440
 --   |  0x0           |  2560x0        |
---   |  workspace 2   |  workspace 3   |
+--   |  workspaces 2-3|  workspaces 4-5|
 --   +--------+-------+-------+--------+
 --            |     laptop     |           1280x720 at scale 1.5
 --            |   1920x1440    |
@@ -66,25 +66,37 @@ hl.bind("switch:off:Lid Switch", hl.dsp.exec_cmd("hyprctl reload"), { locked = t
 ------------------------------
 ---- WORKSPACES ON SCREENS ----
 ------------------------------
--- Each screen starts on its own workspace. Undocked, the Dell rules find no
--- screen, so workspaces 2 and 3 simply open on the laptop when you use them.
+--   laptop:      1
+--   left Dell:   2 (Matrix), 3 (ghostty)
+--   right Dell:  4 (Chrome), 5 (free)
+--
+-- Each screen starts on its first workspace. Undocked, the Dell rules find no
+-- screen, so workspaces 2-5 open on the laptop when you use them.
 hl.workspace_rule({ workspace = "1", monitor = laptop.output, default = true })
 hl.workspace_rule({ workspace = "2", monitor = leftDell,      default = true })
-hl.workspace_rule({ workspace = "3", monitor = rightDell,     default = true })
+hl.workspace_rule({ workspace = "3", monitor = leftDell })
+hl.workspace_rule({ workspace = "4", monitor = rightDell,     default = true })
+hl.workspace_rule({ workspace = "5", monitor = rightDell })
 
--- Programs that open on a particular screen when the Dells are connected.
--- Undocked, the screen isn't found and they open where you are.
+-- Programs with a home workspace. New windows open there, and the view switches
+-- to it. Add "silent" (e.g. workspace = "3 silent") to open without switching.
 -- Find a program's class with: hyprctl clients | grep class
 hl.window_rule({
-    name    = "chrome-on-right-dell",
-    match   = { class = "^google-chrome$" },
-    monitor = rightDell,
+    name      = "element-on-workspace-2",
+    match     = { class = "^([Ee]lement|element-desktop)$" },
+    workspace = "2",
 })
 
 hl.window_rule({
-    name    = "ghostty-on-left-dell",
-    match   = { class = "^com\\.mitchellh\\.ghostty$" },
-    monitor = leftDell,
+    name      = "ghostty-on-workspace-3",
+    match     = { class = "^com\\.mitchellh\\.ghostty$" },
+    workspace = "3",
+})
+
+hl.window_rule({
+    name      = "chrome-on-workspace-4",
+    match     = { class = "^google-chrome$" },
+    workspace = "4",
 })
 
 ---------------------
