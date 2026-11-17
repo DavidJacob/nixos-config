@@ -160,10 +160,10 @@
   programs.nix-ld.enable = true;   # lets LazyVim's Mason-downloaded tools run
 
   environment.systemPackages = with pkgs; [
-    # Terminal and editor
+    # Terminal, rescue editor, basics (Neovim's tools live in home/neovim.nix)
     ghostty
     neovim
-    git gcc gnumake unzip wget curl ripgrep fd lazygit tree-sitter
+    git unzip wget curl
 
     # Hyprland desktop pieces
     hypridle               # idle -> lock -> suspend
