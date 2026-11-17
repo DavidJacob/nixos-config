@@ -39,6 +39,29 @@ in
 
       # Enable DDC/DI for controlling external monitors
       brightness.enable_ddcutil = true;
+
+      # Clock in the middle of the bar: "Tue, November 17 | 15:41"
+      widget.clock = {
+        format = "{:%a, %B %-d | %H:%M}";
+        tooltip_format = "{:%A, %-d %B %Y, week %V}";   # on hover: "Tuesday, 17 November 2026, week 47"
+      };
+
+      # Hide the media widget when nothing is playing (no more "Nothing playing")
+      widget.media.hide_when_no_media = true;
+
+      # A shorter clock for the laptop screen: "Tue 17 Nov | 15:41"
+      widget.clock-short = {
+        type = "clock";
+        format = "{:%a %-d %b | %H:%M}";
+        tooltip_format = "{:%A, %-d %B %Y, week %V}";
+      };
+
+      # Laptop screen only: use its full width and the shorter clock
+      bar.main.monitor.laptop = {
+        match = "eDP-1";
+        margin_ends = 20;
+        center = [ "clock-short" ];
+      };
     };
   };
 }
