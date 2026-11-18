@@ -5,8 +5,10 @@
   imports = [ ../common.nix ];
 
   programs.git = {
-    # TODO: your Famedly email address
-    settings.user.email = "TODO@famedly.com";
+    # The work email lives in ~/.config/git/work-identity (not in this repo)
+    # Once the machine is setup run the following command to add it:
+    # git config --file ~/.config/git/work-identity user.email "you@famedly.com"
+    includes = [ { path = "~/.config/git/work-identity"; } ];
     # TODO: after install, create a GPG key for this machine with your work
     # email, add it to GitHub, and put its ID here. Famedly requires signed
     # commits, so committing fails until the key exists.
