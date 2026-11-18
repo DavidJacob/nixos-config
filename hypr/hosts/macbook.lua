@@ -3,10 +3,10 @@
 -- two Dells (see the diagram in hyprland.lua).
 -- TODO: check the output name after install with `hyprctl monitors`.
 return {
-    laptop = {
-        output   = "eDP-1",
-        mode     = "preferred",
-        position = "1920x1440",
-        scale    = "2",
-    },
+  laptop = {
+    output = "eDP-1",
+    mode = "preferred",
+    position = "1920x1440",
+    scale = "2",
+  },
 }
