@@ -9,11 +9,7 @@
     # Once the machine is setup run the following command to add it:
     # git config --file ~/.config/git/work-identity user.email "you@famedly.com"
     includes = [ { path = "~/.config/git/work-identity"; } ];
-    # TODO: after install, create a GPG key for this machine with your work
-    # email, add it to GitHub, and put its ID here. Famedly requires signed
-    # commits, so committing fails until the key exists.
-    #   gpg --list-secret-keys --keyid-format=long
-    # signing.key = "XXXXXXXXXXXXXXXX";
+    signing.key = "5EE1BED6E2223CB4";
   };
 
   # The Home Manager release this machine was first set up with. Never change it.
