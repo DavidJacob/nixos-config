@@ -1,6 +1,6 @@
 # home/common.nix: David's home folder, the same on every laptop.
 # What differs per machine (git email, signing key) is in home/hosts/<name>.nix.
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, osConfig, ... }:
 
 let
   # Writable links into the repo: edits apply as soon as you save, no rebuild.
@@ -66,6 +66,10 @@ in
     # ~/.config/hypr becomes a link to the hypr folder in this repo.
     # hyprland.lua loads the screen settings for this machine from hypr/hosts/.
     xdg.configFile."hypr".source = link "hypr";
+
+    # Hyprland's Lua API definitions (hl.*), so Neovim's Lua language server
+    # knows them. hypr/.luarc.json points at this folder.
+    xdg.dataFile."hyprland-stubs".source = "${osConfig.programs.hyprland.package}/share/hypr/stubs";
 
     # ---------- USB disk automounter ----------
     services.udiskie = {
