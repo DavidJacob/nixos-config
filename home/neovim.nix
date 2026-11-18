@@ -48,7 +48,7 @@
   };
 
   # The LazyVim config lives in the repo; ~/.config/nvim links to it (writable)
-  xdg.configFile."nvim".source = config.lib.file.mkOutOfStoreSymlink "/etc/nixos/nvim";
+  xdg.configFile."nvim".source = config.lib.file.mkOutOfStoreSymlink "${config.my.repo}/nvim";
 
   # Used from the shell as well as inside Neovim
   home.packages = with pkgs; [

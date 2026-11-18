@@ -27,7 +27,7 @@ let
         exit 0
       fi
       # Its own ghostty process, so the window gets its own class for the window rule
-      setsid -f ghostty --class=maple.cheatsheet --gtk-single-instance=false \
+      setsid -f ghostty --class=nixos.cheatsheet --gtk-single-instance=false \
         --title=Shortcuts -e ${view}/bin/hypr-cheatsheet-view >/dev/null 2>&1
     '';
   };

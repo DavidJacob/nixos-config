@@ -1,6 +1,9 @@
 # home/zsh.nix: David's shell, managed by Home Manager
-{ ... }:
+{ config, ... }:
 
+let
+  repo = config.my.repo;   # ~/nixos-config, set in home/common.nix
+in
 {
   programs.zsh = {
     enable = true;
@@ -31,9 +34,11 @@
     ];
 
     shellAliases = {
-      # NixOS
-      rebuild = "sudo nixos-rebuild switch --flake /etc/nixos";
-      update  = "nix flake update --flake /etc/nixos && sudo nixos-rebuild switch --flake /etc/nixos";
+      # NixOS: builds the configuration named after this machine's hostname.
+      # --sudo builds as you and only switches as root, so git doesn't
+      # complain about the repo's owner.
+      rebuild = "nixos-rebuild switch --flake ${repo} --sudo";
+      update  = "nix flake update --flake ${repo} && nixos-rebuild switch --flake ${repo} --sudo";
       clean   = "sudo nix-collect-garbage --delete-older-than 14d";
 
       # Everyday (ls, ll and lt come from programs.eza below)

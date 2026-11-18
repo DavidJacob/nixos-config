@@ -5,7 +5,7 @@ return {
       "<leader>fz",
       function()
         Snacks.picker.files({
-          cwd = "/etc/nixos",
+          cwd = vim.fn.expand("~/nixos-config"),
           hidden = true,
         })
       end,
@@ -15,7 +15,7 @@ return {
       "<leader>sz",
       function()
         Snacks.picker.grep({
-          cwd = "/etc/nixos",
+          cwd = vim.fn.expand("~/nixos-config"),
           hidden = true,
         })
       end,

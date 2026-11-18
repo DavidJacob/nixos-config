@@ -1,24 +1,15 @@
+# modules/common.nix: everything the three laptops share.
+# Machine-specific settings (disks, graphics, hardware quirks) live in hosts/<name>/.
 { config, pkgs, ... }:
 
 {
-  imports = [ ./hardware-configuration.nix ];
-
   # ---------- Boot, encryption, hibernation ----------
+  # Every laptop: LUKS-encrypted disk with LVM inside (root + swap), one
+  # password at boot. Each host says where its encrypted partition is.
   boot.loader.systemd-boot.enable = true;
   boot.loader.systemd-boot.configurationLimit = 10;   # keep the 1 GB boot partition from filling up
   boot.loader.efi.canTouchEfiVariables = true;
-  boot.kernelPackages = pkgs.linuxPackages_latest;   # newest kernel: best for recent Intel laptops
-
-  # Unlock the encrypted partition at boot. Root and swap are LVM volumes
-  # inside it, so one password unlocks both. nixos-generate-config does not
-  # detect LUKS under LVM, which is why this line is needed here.
-  boot.initrd.luks.devices.cryptroot = {
-    device = "/dev/disk/by-partlabel/cryptroot";
-    allowDiscards = true;   # lets SSD TRIM pass through the encryption
-  };
-
-  # Resume from the encrypted swap volume after hibernation
-  boot.resumeDevice = "/dev/disk/by-label/swap";
+  boot.kernelPackages = pkgs.linuxPackages_latest;   # newest kernel: best for recent laptops
 
   # Closing the lid suspends; after 1 hour asleep the laptop hibernates
   services.logind.settings.Login = {
@@ -28,7 +19,7 @@
   systemd.sleep.settings.Sleep.HibernateDelaySec = "1h";
 
   # ---------- Networking ----------
-  networking.hostName = "maple";
+  # The hostname comes from flake.nix (the configuration's name)
   networking.networkmanager.enable = true;
 
   # ---------- Locale: English language, UK formats, US keyboard ----------
@@ -60,6 +51,7 @@
   };
 
   # ---------- Caldigit Dock ----------
+  # Shared so any of the laptops can use the desk setup
   services.hardware.bolt.enable = true;   # approves Thunderbolt devices
 
   # Never prefer the CalDigit dock's audio: built-in speakers and mic stay default.
@@ -95,11 +87,9 @@
     extraGroups = [ "wheel" "networkmanager" "video" "i2c" ];
   };
 
-  # ---------- Intel Iris Xe graphics ----------
-  hardware.graphics = {
-    enable = true;
-    extraPackages = with pkgs; [ intel-media-driver ];   # hardware video decoding
-  };
+  # ---------- Graphics ----------
+  # Drivers for the specific GPU are added per host
+  hardware.graphics.enable = true;
 
   # ---------- Laptop power ----------
   services.thermald.enable = true;
@@ -179,8 +169,4 @@
     noto-fonts
     noto-fonts-color-emoji
   ];
-
-  # Set this to the value nixos-generate-config wrote in its own
-  # configuration.nix, then never change it.
-  system.stateVersion = "26.05";
 }

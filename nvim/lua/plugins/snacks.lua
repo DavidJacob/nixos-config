@@ -6,8 +6,8 @@ return {
         projects = {
 
           -- Hardcoded projects which will always appear in the project list
-          -- (/etc/nixos holds your NixOS, zsh, Hyprland and Neovim config)
-          projects = { "/etc/nixos" },
+          -- (~/nixos-config holds your NixOS, zsh, Hyprland and Neovim config)
+          projects = { "~/nixos-config" },
 
           -- Scan only the ~/code directory for project root patterns
           dev = { "~/code" },

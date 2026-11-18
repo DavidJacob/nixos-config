@@ -1,5 +1,8 @@
--- ~/.config/hypr/hyprland.lua: starter config for maple (Hyprland 0.55+ Lua format)
+-- ~/.config/hypr/hyprland.lua: shared by all three laptops (Hyprland 0.55+ Lua format)
 -- Changes apply as soon as you save. Full reference: https://wiki.hypr.land/Configuring/Start/
+--
+-- Each laptop's own screen is set in hypr/hosts/<hostname>.lua; everything
+-- else in this file is the same everywhere.
 
 ------------------
 ---- MONITORS ----
@@ -13,7 +16,7 @@
 --   |  0x0           |  2560x0        |
 --   |  workspaces 2-3|  workspaces 4-5|
 --   +--------+-------+-------+--------+
---            |     laptop     |           1280x720 at scale 1.5
+--            |     laptop     |           position and scale: hypr/hosts/<hostname>.lua
 --            |   1920x1440    |
 --            |  workspace 1   |
 --            +----------------+
@@ -24,12 +27,23 @@
 local leftDell  = "desc:Dell Inc. DELL P2720DC 81WTK9BQ09LS"   -- cabled to the CalDigit
 local rightDell = "desc:Dell Inc. DELL P2720DC 81WTK9CD05SS"   -- daisy-chained from the left one
 
-local laptop = {
-    output   = "eDP-1",
-    mode     = "preferred",
-    position = "1920x1440",
-    scale    = "1.5",
-}
+-- This laptop's own screen, from hypr/hosts/<hostname>.lua (e.g. hosts/maple.lua).
+-- If there's no file for this machine, the screen still works with defaults.
+local function loadHost()
+    local file = io.open("/etc/hostname", "r")
+    local name = file and file:read("*l")
+    if file then file:close() end
+    local found, result = pcall(require, "hosts." .. name)
+    if found then return result end
+    return dofile(os.getenv("HOME") .. "/.config/hypr/hosts/" .. name .. ".lua")
+end
+
+local ok, host = pcall(loadHost)
+if not ok then
+    host = { laptop = { output = "eDP-1", mode = "preferred", position = "auto", scale = "auto" } }
+end
+
+local laptop = host.laptop
 hl.monitor(laptop)
 
 hl.monitor({
@@ -302,7 +316,7 @@ hl.bind(mainMod .. " + SHIFT + E", hl.dsp.exit(),               { description = 
 hl.window_rule({
     -- The shortcut cheatsheet (Super+/): a floating window in the middle of the screen
     name   = "cheatsheet",
-    match  = { class = "^maple\\.cheatsheet$" },
+    match  = { class = "^nixos\\.cheatsheet$" },
     float  = true,
     size   = "760 monitor_h*0.85",   -- fits the laptop screen as well as the Dells
     center = true,
