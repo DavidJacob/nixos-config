@@ -13,14 +13,11 @@
     # and laptop ones. Check for a specific profile later:
     #   https://github.com/NixOS/nixos-hardware/tree/master/lenovo/thinkpad/t14
     inputs.nixos-hardware.nixosModules.lenovo-thinkpad   # TrackPoint, laptop defaults
-    inputs.nixos-hardware.nixosModules.common-pc-ssd
 
-    # TODO: pick the CPU line that matches the laptop (lscpu on the installer).
-    # Intel model:
-    inputs.nixos-hardware.nixosModules.common-cpu-intel   # microcode + Intel graphics drivers
-    # AMD model: delete the Intel line above and use these two instead
-    # inputs.nixos-hardware.nixosModules.common-cpu-amd
-    # inputs.nixos-hardware.nixosModules.common-gpu-amd
+    # AMD Ryzen PRO 250 with Radeon 780M graphics
+    inputs.nixos-hardware.nixosModules.common-cpu-amd         # Microcode
+    inputs.nixos-hardware.nixosModules.common-cpu-amd-pstate  # modern CPU power management
+    inputs.nixos-hardware.nixosModules.common-gpu-amd         # Radeon drivers, early display at boot
   ]
   # Created during installation (see INSTALL.md). Until then the config still
   # evaluates, so it can be checked from another machine.
@@ -33,7 +30,7 @@
   disabledModules = [ "services/monitoring/orbit.nix" ];
 
   # ---------- Disk ----------
-  # TODO: set to the laptop's RAM (check with `free -h` on the installer)
+  # Equal to systrm RAM
   my.disk.swapSize = "32G";
 
   # ---------- Famedly ----------
