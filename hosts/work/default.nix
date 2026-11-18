@@ -30,7 +30,7 @@
   disabledModules = [ "services/monitoring/orbit.nix" ];
 
   # ---------- Disk ----------
-  # Equal to systrm RAM
+  # Equal to system RAM
   my.disk.swapSize = "32G";
 
   # ---------- Famedly ----------
