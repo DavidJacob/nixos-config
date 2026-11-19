@@ -22,15 +22,6 @@ in
     # ---------- Packages ----------
     home.packages = with pkgs; [
       google-chrome
-      # Pre-built Element plus a small wrapper that adds the keyring flag (no source build)
-      (symlinkJoin {
-        name = "element-desktop";
-        paths = [ element-desktop ];
-        nativeBuildInputs = [ makeWrapper ];
-        postBuild = ''
-          wrapProgram $out/bin/element-desktop --add-flags "--password-store=gnome-libsecret"
-        '';
-      })
     ];
 
     # ---------- Git, with commits signed by your GPG key ----------
