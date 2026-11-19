@@ -1,5 +1,5 @@
 # hosts/work: ThinkPad T14 Gen 7. Famedly work laptop.
-{ inputs, lib, ... }:
+{ inputs, lib, pkgs, ... }:
 
 {
   imports = [
@@ -51,4 +51,10 @@
   # The NixOS release this machine was first installed with. Set it once at
   # install time (nixos-generate-config prints it), then never change it.
   system.stateVersion = "26.11";
+
+  # ---------- Famedly ----------
+
+  # ---------- YubiKey ----------
+  services.pcscd.enable = true;
+  environment.systemPackages = [ pkgs.yubikey-manager ];
 }
