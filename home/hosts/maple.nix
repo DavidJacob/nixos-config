@@ -10,5 +10,5 @@
   };
 
   # The Home Manager release this machine was first set up with. Never change it.
-  home.stateVersion = "26.05";
+  home.stateVersion = "26.11";
 }
