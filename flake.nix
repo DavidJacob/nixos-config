@@ -28,7 +28,7 @@
       inputs.nixpkgs.follows = "nixpkgs";   # only used for its own tests; saves a download
     };
 
-    # Declarative disk layout: partitions, encryption and LVM (used by macbook and work)
+    # Declarative disk layout: partitions, encryption and LVM (used by all three)
     disko = {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";

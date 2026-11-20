@@ -1,6 +1,5 @@
 # modules/disk-layout.nix: the standard laptop disk, described for disko.
-# Used by macbook and work. maple was partitioned by hand before this existed,
-# so it keeps its own settings in hosts/maple/default.nix.
+# Used by all three laptops; each host sets my.disk.swapSize.
 #
 #   /dev/nvme0n1 (my.disk.device)
 #   ├─ ESP        1 GiB   FAT32, /boot

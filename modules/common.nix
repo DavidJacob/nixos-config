@@ -5,7 +5,7 @@
 {
   # ---------- Boot, encryption, hibernation ----------
   # Every laptop: LUKS-encrypted disk with LVM inside (root + swap), one
-  # password at boot. Each host says where its encrypted partition is.
+  # password at boot. The layout itself is in modules/disk-layout.nix (disko).
   boot.loader.systemd-boot.enable = true;
   boot.loader.systemd-boot.configurationLimit = 10;   # keep the 1 GB boot partition from filling up
   boot.loader.efi.canTouchEfiVariables = true;

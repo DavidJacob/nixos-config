@@ -1,4 +1,4 @@
-# hosts/work: ThinkPad T14 Gen 7. Famedly work laptop.
+# hosts/work: ThinkPad T14 Gen 7 (AMD Ryzen PRO 250, 32 GB). Famedly work laptop.
 { inputs, lib, pkgs, ... }:
 
 {
@@ -48,13 +48,11 @@
   #   netrc-file = /etc/nix/netrc
   # '';
 
+  # ---------- YubiKey ----------
+  services.pcscd.enable = true;                            # smartcard service GnuPG uses
+  environment.systemPackages = [ pkgs.yubikey-manager ];   # ykman: YubiKey settings
+
   # The NixOS release this machine was first installed with. Set it once at
   # install time (nixos-generate-config prints it), then never change it.
   system.stateVersion = "26.11";
-
-  # ---------- Famedly ----------
-
-  # ---------- YubiKey ----------
-  services.pcscd.enable = true;
-  environment.systemPackages = [ pkgs.yubikey-manager ];
 }
