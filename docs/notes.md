@@ -72,6 +72,11 @@ Rules for working in the repo are in `AGENTS.md`; this file is the history.
   source (1.4 GB). `symlinkJoin` + `wrapProgram` adds
   `--password-store=gnome-libsecret` to the pre-built package. Element is
   work-only.
+- **k9s read-only by default (work):** configured with `programs.k9s` in
+  `home/hosts/work.nix` (which also installs it, so it's not in
+  `home.packages`). `readOnly = true` blocks changes to clusters; start
+  `k9s --write` for a session that needs them. `~/.config/k9s/config.yaml` is
+  a read-only Home Manager file, so settings changed inside k9s don't stick.
 - **orbit module disabled on work:** nixos-unstable added its own
   `services.orbit`, which clashes with the one from fleet-nixos (pulled in by
   famedly-nixos): "services.orbit.enable is already declared".
