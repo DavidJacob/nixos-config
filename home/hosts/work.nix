@@ -17,9 +17,16 @@
       pcsc-shared
     '';
 
-    # Element (Matrix), work only. Pre-built Element plus a small wrapper that
-    # adds the keyring flag (no source build)
-    packages = [
+    # Work-only apps and tools
+    packages = with pkgs; [
+      k9s             # terminal UI for Kubernetes clusters
+      kubectl         # kubernetes CLI
+      kubelogin-oidc  # Allow kubectl to authenticate via OIDC
+      opentofu        # infrastructure as code, open-source Terraform fork (command: tofu)
+      terragrunt      # wrapper around OpenTofu/Terraform for multi-environment setups
+
+      # Element (Matrix). Pre-built Element plus a small wrapper that adds the
+      # keyring flag (no source build)
       (pkgs.symlinkJoin {
         name = "element-desktop";
         paths = [ pkgs.element-desktop ];
