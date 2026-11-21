@@ -120,6 +120,20 @@
   # ---------- USB ----------
   services.udisks2.enable = true;   # lets your user mount USB drives without sudo
 
+  # ---------- File manager: Thunar ----------
+  # These are system (NixOS) options, not Home Manager ones: Thunar's helpers
+  # (gvfs, tumbler, xfconf) run as D-Bus services that the system has to set up.
+  programs.thunar = {
+    enable = true;
+    plugins = with pkgs; [
+      thunar-archive-plugin   # right-click → extract / compress
+      thunar-volman           # handles USB drives and phones
+    ];
+  };
+  services.gvfs.enable = true;      # trash, and access to phones and network shares
+  services.tumbler.enable = true;   # image and video thumbnails
+  programs.xfconf.enable = true;    # lets Thunar save its settings
+
   # ---------- External Monitors ----------
   hardware.i2c.enable = true;   # DDC/DI: control brightness of external monitors
 

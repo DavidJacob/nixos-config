@@ -96,6 +96,11 @@ Rules for working in the repo are in `AGENTS.md`; this file is the history.
 - **CalDigit audio has low priority:** WirePlumber rule in
   `modules/common.nix`, so the laptop's speakers and mic stay the default when
   docked.
+- **Thunar is set up system-wide:** `programs.thunar`, `services.gvfs`,
+  `services.tumbler` and `programs.xfconf` are NixOS options (in
+  `modules/common.nix`). Home Manager doesn't have them, because the helpers
+  (trash, phones, thumbnails, saved settings) run as D-Bus services that the
+  system has to set up.
 - **Lid and sleep:** lid closed suspends; after 1 hour asleep it hibernates
   (swap on LVM inside LUKS, resume configured by disko). Idle: lock at 15 min,
   screens off at 15.5, suspend at 30 (`hypr/hypridle.conf`).
