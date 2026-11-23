@@ -15,6 +15,12 @@
   # ---------- Intel Iris Xe graphics ----------
   hardware.graphics.extraPackages = with pkgs; [ intel-media-driver ];   # hardware video decoding
 
+  # ---------- Mullvad VPN ----------
+  services.mullvad-vpn = {
+    enable = true;       # the daemon with the `mullvad` command
+    gui.enable = true;   # app tray icon
+  };
+
   # The NixOS release this machine was first installed with. Set it once at
   # install time, then never change it.
   system.stateVersion = "26.11";
