@@ -28,7 +28,22 @@ in
     # Changes made in Noctalia's settings window are stored separately and
     # override these, so you can experiment there and copy keepers in here.
     settings = {
-      bar.main.position = "top";
+      bar.main = {
+        position = "top";
+
+        # Right side of the bar: Noctalia's defaults plus caffeine (keep awake)
+        end = [
+          "media" "tray" "notifications" "clipboard" "network" "bluetooth"
+          "caffeine" "volume" "brightness" "battery" "control-center" "session"
+        ];
+
+        # Laptop screen only: use its full width and the shorter clock
+        monitor.laptop = {
+          match = "eDP-1";
+          margin_ends = 20;
+          center = [ "clock-short" ];
+        };
+      };
 
       # Wallpapers to choose from in Noctalia's wallpaper picker
       wallpaper.directory = "${wallpapers}/share/backgrounds/nixos";
@@ -54,13 +69,6 @@ in
         type = "clock";
         format = "{:%a %-d %b | %H:%M}";
         tooltip_format = "{:%A, %-d %B %Y, week %V}";
-      };
-
-      # Laptop screen only: use its full width and the shorter clock
-      bar.main.monitor.laptop = {
-        match = "eDP-1";
-        margin_ends = 20;
-        center = [ "clock-short" ];
       };
     };
   };
