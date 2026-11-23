@@ -21,6 +21,11 @@
     gui.enable = true;   # app tray icon
   };
 
+  # LocalSend: send files to nearby phones and computers on the same Wi-Fi
+  # (like AirDrop). Also opens port 53317 in the firewall so others can find
+  # this machine and send to it.
+  programs.localsend.enable = true;
+
   # The NixOS release this machine was first installed with. Set it once at
   # install time, then never change it.
   system.stateVersion = "26.11";
