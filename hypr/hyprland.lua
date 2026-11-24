@@ -133,7 +133,7 @@ hl.on("hyprland.start", function()
   hl.exec_cmd("hypridle")
   hl.exec_cmd("systemctl --user start hyprpolkitagent")
   hl.exec_cmd("udiskie --tray")
-  hl.exec_cmd("mullvad-vpn")
+  hl.exec_cmd("command -v mullvad-vpn >/dev/null && mullvad-vpn")
 end)
 
 -------------------------------
