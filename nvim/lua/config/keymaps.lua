@@ -14,3 +14,21 @@ vim.keymap.set("n", "<leader>o", function()
     Snacks.explorer.open()
   end
 end, { desc = "Focus explorer" })
+
+-- Emoji picker: type to search by name, Enter copies the emoji to the system
+-- clipboard (paste anywhere with Ctrl+V, or `p` in Neovim).
+-- Uses snacks.nvim's icons picker limited to emoji; the emoji list is
+-- downloaded once and cached. (<leader>si is LazyVim's picker for all icons,
+-- which inserts the icon into the buffer instead.)
+vim.keymap.set("n", "<leader>se", function()
+  Snacks.picker.icons({
+    icon_sources = { "emoji" },
+    confirm = function(picker, item)
+      picker:close()
+      if item then
+        vim.fn.setreg("+", item.icon)
+        Snacks.notify("Copied " .. item.icon .. " " .. item.name, { title = "Emoji" })
+      end
+    end,
+  })
+end, { desc = "Emoji (copy)" })
