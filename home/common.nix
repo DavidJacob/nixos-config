@@ -22,6 +22,7 @@ in
     # ---------- Packages ----------
     home.packages = with pkgs; [
       google-chrome
+      pomo            # Pomodoro timer in the terminal (github.com/Bahaaio/pomo)
     ];
 
     # ---------- Git, with commits signed by your GPG key ----------
