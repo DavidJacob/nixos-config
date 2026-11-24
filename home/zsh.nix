@@ -90,6 +90,12 @@ in
   # cat with syntax highlighting (run it as `bat`)
   programs.bat.enable = true;
 
+  # Terminal multiplexer: split one terminal into panes and tabs, and keep
+  # sessions running after you close the window (`zellij attach` to return).
+  # Start it by typing `zellij`. It doesn't start with every shell; set
+  # enableZshIntegration = true if you want that.
+  programs.zellij.enable = true;
+
   home.sessionVariables = {
     EDITOR = "nvim";
     VISUAL = "nvim";

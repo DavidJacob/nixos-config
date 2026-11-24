@@ -77,6 +77,12 @@ Rules for working in the repo are in `AGENTS.md`; this file is the history.
   `home.packages`). `readOnly = true` blocks changes to clusters; start
   `k9s --write` for a session that needs them. `~/.config/k9s/config.yaml` is
   a read-only Home Manager file, so settings changed inside k9s don't stick.
+- **zellij with default settings:** enabled with `programs.zellij` in
+  `home/zsh.nix` on every machine. It isn't started automatically
+  (`enableZshIntegration` is off) so plain terminals stay plain. With no
+  `settings` set, Home Manager doesn't write `~/.config/zellij/config.kdl`.
+  Once `settings` are added, that file becomes read-only, so change settings
+  through Nix.
 - **orbit module disabled on work:** nixos-unstable added its own
   `services.orbit`, which clashes with the one from fleet-nixos (pulled in by
   famedly-nixos): "services.orbit.enable is already declared".
