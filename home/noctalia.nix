@@ -19,6 +19,13 @@ let
       simple-dark-gray
     ];
   };
+
+  # Right side of the bar, after the media widget: Noctalia's defaults plus
+  # caffeine (keep awake). Shared by the external monitors and the laptop.
+  endWidgets = [
+    "tray" "notifications" "clipboard" "network" "bluetooth"
+    "caffeine" "volume" "brightness" "battery" "control-center" "session"
+  ];
 in
 {
   programs.noctalia = {
@@ -31,17 +38,16 @@ in
       bar.main = {
         position = "top";
 
-        # Right side of the bar: Noctalia's defaults plus caffeine (keep awake)
-        end = [
-          "media" "tray" "notifications" "clipboard" "network" "bluetooth"
-          "caffeine" "volume" "brightness" "battery" "control-center" "session"
-        ];
+        # `++` joins two lists: media first, then the rest
+        end = [ "media" ] ++ endWidgets;
 
-        # Laptop screen only: use its full width and the shorter clock
+        # Laptop screen only: use its full width, the shorter clock and a
+        # narrower media widget (see widget.media-short below)
         monitor.laptop = {
           match = "eDP-1";
           margin_ends = 20;
           center = [ "clock-short" ];
+          end = [ "media-short" ] ++ endWidgets;
         };
       };
 
@@ -63,6 +69,17 @@ in
 
       # Hide the media widget when nothing is playing (no more "Nothing playing")
       widget.media.hide_when_no_media = true;
+
+      # A narrower media widget for the laptop screen. At the default 220 px
+      # the right-hand widgets don't fit next to the clock, so Noctalia pushes
+      # them left under it and the start of the media widget gets cut off.
+      # Capping it at 120 px leaves a gap before the clock; long titles are
+      # truncated sooner instead.
+      widget.media-short = {
+        type = "media";
+        hide_when_no_media = true;
+        max_length = 200;
+      };
 
       # A shorter clock for the laptop screen: "Tue 17 Nov | 15:41"
       widget.clock-short = {
