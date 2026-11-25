@@ -110,13 +110,14 @@ Rules for working in the repo are in `AGENTS.md`; this file is the history.
 - **Lid and sleep:** lid closed suspends; after 1 hour asleep it hibernates
   (swap on LVM inside LUKS, resume configured by disko). Idle: lock at 15 min,
   screens off at 15.5, suspend at 30 (`hypr/hypridle.conf`).
-- **Narrower bar widgets on the laptop screen:** the laptop screen is only
-  1536 px wide at scale 1.25. With Noctalia's defaults the right-hand widgets
-  are wider than the space next to the clock, so Noctalia pushes them left
-  under it and the start of the media widget is cut off. The laptop's bar
-  (`monitor.laptop` in `home/noctalia.nix`) uses `clock-short` and
-  `media-short` (`max_length = 200` instead of 220). Adding a spacer doesn't
-  help: it makes the right-hand group even wider.
+- **Media widget on the left of the bar:** the laptop screen is only 1536 px
+  wide at scale 1.25. When the right-hand widgets are wider than the space
+  next to the clock, Noctalia pushes them left under it and the first one gets
+  cut off. With media on the right this kept happening as tray icons were
+  added (e.g. Fleet), even with a narrower `media-short` widget, so media now
+  sits after the workspaces on the left (`start` in `home/noctalia.nix`) at
+  its default size (220 px). The laptop still uses the shorter `clock-short`.
+  A spacer doesn't help: it makes the crowded side even wider.
 - **Mason plus Nix in Neovim:** Mason's builds of lua_ls and marksman need
   libraries NixOS doesn't have, so those come from Nix (`mason = false`);
   everything else stays with Mason, made to work by nix-ld and the toolchains
